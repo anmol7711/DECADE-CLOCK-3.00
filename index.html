@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Decade Clock — See Your Future Self</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     ① CINEMATIC INTRO SCREEN  (UPGRADED)
+════════════════════════════════════════════════════════ -->
+<div class="intro-screen" id="intro-screen">
+
+  <!-- Animated background layers -->
+  <div class="intro-bg-grid"></div>
+  <div class="intro-bg-orb orb-1"></div>
+  <div class="intro-bg-orb orb-2"></div>
+  <div class="intro-bg-orb orb-3"></div>
+
+  <div class="intro-inner">
+
+    <!-- Eyebrow -->
+    <div class="intro-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Based on habit science &amp; behavioral psychology
+      <span class="eyebrow-dot"></span>
+    </div>
+
+    <!-- Main headline -->
+    <h1 class="intro-headline">
+      The choices you make<br/>
+      <em>today</em> are already<br/>
+      <span class="headline-writing">writing your future.</span>
+    </h1>
+
+    <!-- Sub-copy -->
+    <p class="intro-sub">
+      Most people don't fail suddenly. They drift — one small habit at a time —
+      into a life they never chose. <strong>Decade Clock</strong> shows you exactly where
+      you're headed, and what changes when you course-correct.
+    </p>
+
+    <!-- Live preview bar — animated teaser -->
+    <div class="intro-preview-wrap">
+      <div class="preview-label">Your trajectory if nothing changes →</div>
+      <div class="intro-preview-bar">
+        <div class="ipb-track">
+          <div class="ipb-fill" id="ipb-fill"></div>
+          <div class="ipb-glow" id="ipb-glow"></div>
+          <div class="ipb-marker" id="ipb-marker">
+            <span class="ipb-marker-label" id="ipb-marker-label">47%</span>
+          </div>
+        </div>
+        <div class="ipb-zones">
+          <span class="ipb-zone zone-red">Drifting</span>
+          <span class="ipb-zone zone-amber">Coasting</span>
+          <span class="ipb-zone zone-green">Thriving</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Outcome teasers -->
+    <div class="intro-teasers">
+      <div class="teaser teaser-warn" id="teaser-burnout">
+        <div class="teaser-icon">🔴</div>
+        <div class="teaser-body">
+          <div class="teaser-title">Burnout at 34</div>
+          <div class="teaser-desc">High stress + low sleep hits hard. Most don't see it coming.</div>
+        </div>
+      </div>
+      <div class="teaser teaser-gold" id="teaser-success">
+        <div class="teaser-icon">⭐</div>
+        <div class="teaser-body">
+          <div class="teaser-title">Career peak at 38</div>
+          <div class="teaser-desc">Deep work compounded for 15 years creates an unfair edge.</div>
+        </div>
+      </div>
+      <div class="teaser teaser-muted" id="teaser-lonely">
+        <div class="teaser-icon">🌫️</div>
+        <div class="teaser-body">
+          <div class="teaser-title">Quiet loneliness at 45</div>
+          <div class="teaser-desc">Neglected relationships become the regret no one talks about.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="intro-cta-wrap">
+      <button class="intro-cta-btn" id="start-btn">
+        <span class="cta-inner">
+          <span class="cta-text">Reveal My Future</span>
+          <span class="cta-arrow">→</span>
+        </span>
+        <span class="cta-shine"></span>
+      </button>
+      <div class="intro-cta-note">No signup · No data saved · 2 minutes</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ② MAIN APP
+════════════════════════════════════════════════════════ -->
+<div class="app hidden" id="app">
+
+  <nav class="top-nav">
+    <div class="nav-brand">DECADE<span class="brand-accent">CLOCK</span></div>
+    <div class="nav-center">
+      Trajectory: <strong id="nav-score">—</strong> / 100
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn game-trigger-btn" id="open-game-btn">🎮 Simulate My Future</button>
+      <button class="ghost-toggle-btn" id="ghost-toggle">
+        👻 Ghost Mode <span class="ghost-badge" id="ghost-badge">OFF</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="main-layout">
+
+    <!-- LEFT: HABITS -->
+    <aside class="habits-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">Your Daily Habits</h2>
+        <p class="panel-sub">Every slider rewrites your story in real time.</p>
+      </div>
+
+      <div class="habit-age-row">
+        <span class="age-label">Current age</span>
+        <div class="age-stepper">
+          <button class="age-btn" id="age-down">−</button>
+          <span class="age-val" id="age-val">22</span>
+          <button class="age-btn" id="age-up">+</button>
+        </div>
+      </div>
+
+      <div class="habits-list">
+        <!-- SLEEP -->
+        <div class="habit-row" data-key="sleep">
+          <div class="habit-top">
+            <span class="habit-emoji">🌙</span>
+            <div class="habit-info"><span class="habit-name">Sleep</span><span class="habit-unit">hours / night</span></div>
+            <span class="habit-val" id="hval-sleep">7</span>
+          </div>
+          <div class="slider-wrap">
+            <div class="hslider-track">
+              <div class="hslider-fill" id="hfill-sleep"></div>
+              <input type="range" min="3" max="10" value="7" id="sl-sleep" class="hslider"/>
+            </div>
+          </div>
+          <div class="habit-impact" id="impact-sleep"></div>
+        </div>
+        <!-- EXERCISE -->
+        <div class="habit-row" data-key="exercise">
+          <div class="habit-top">
+            <span class="habit-emoji">🏃</span>
+            <div class="habit-info"><span class="habit-name">Exercise</span><span class="habit-unit">days / week</span></div>
+            <span class="habit-val" id="hval-exercise">3</span>
+          </div>
+          <div class="slider-wrap">
+            <div class="hslider-track">
+              <div class="hslider-fill" id="hfill-exercise"></div>
+              <input type="range" min="0" max="7" value="3" id="sl-exercise" class="hslider"/>
+            </div>
+          </div>
+          <div class="habit-impact" id="impact-exercise"></div>
+        </div>
+        <!-- SCREEN -->
+        <div class="habit-row" data-key="screen">
+          <div class="habit-top">
+            <span class="habit-emoji">📱</span>
+            <div class="habit-info"><span class="habit-name">Screen Time</span><span class="habit-unit">hours / day</span></div>
+            <span class="habit-val" id="hval-screen">5</span>
+          </div>
+          <div class="slider-wrap">
+            <div class="hslider-track">
+              <div class="hslider-fill" id="hfill-screen"></div>
+              <input type="range" min="0" max="14" value="5" id="sl-screen" class="hslider"/>
+            </div>
+          </div>
+          <div class="habit-impact" id="impact-screen"></div>
+        </div>
+        <!-- WORK -->
+        <div class="habit-row" data-key="work">
+          <div class="habit-top">
+            <span class="habit-emoji">🧠</span>
+            <div class="habit-info"><span class="habit-name">Deep Work</span><span class="habit-unit">hours / day</span></div>
+            <span class="habit-val" id="hval-work">3</span>
+          </div>
+          <div class="slider-wrap">
+            <div class="hslider-track">
+              <div class="hslider-fill" id="hfill-work"></div>
+              <input type="range" min="0" max="12" value="3" id="sl-work" class="hslider"/>
+            </div>
+          </div>
+          <div class="habit-impact" id="impact-work"></div>
+        </div>
+        <!-- SOCIAL -->
+        <div class="habit-row" data-key="social">
+          <div class="habit-top">
+            <span class="habit-emoji">🤝</span>
+            <div class="habit-info"><span class="habit-name">Social Connection</span><span class="habit-unit">hours / week</span></div>
+            <span class="habit-val" id="hval-social">5</span>
+          </div>
+          <div class="slider-wrap">
+            <div class="hslider-track">
+              <div class="hslider-fill" id="hfill-social"></div>
+              <input type="range" min="0" max="20" value="5" id="sl-social" class="hslider"/>
+            </div>
+          </div>
+          <div class="habit-impact" id="impact-social"></div>
+        </div>
+        <!-- LEARNING -->
+        <div class="habit-row" data-key="learning">
+          <div class="habit-top">
+            <span class="habit-emoji">📚</span>
+            <div class="habit-info"><span class="habit-name">Learning</span><span class="habit-unit">hours / week</span></div>
+            <span class="habit-val" id="hval-learning">2</span>
+          </div>
+          <div class="slider-wrap">
+            <div class="hslider-track">
+              <div class="hslider-fill" id="hfill-learning"></div>
+              <input type="range" min="0" max="20" value="2" id="sl-learning" class="hslider"/>
+            </div>
+          </div>
+          <div class="habit-impact" id="impact-learning"></div>
+        </div>
+        <!-- DIET -->
+        <div class="habit-row" data-key="diet">
+          <div class="habit-top">
+            <span class="habit-emoji">🥗</span>
+            <div class="habit-info"><span class="habit-name">Diet Quality</span><span class="habit-unit">score / 10</span></div>
+            <span class="habit-val" id="hval-diet">5</span>
+          </div>
+          <div class="slider-wrap">
+            <div class="hslider-track">
+              <div class="hslider-fill" id="hfill-diet"></div>
+              <input type="range" min="1" max="10" value="5" id="sl-diet" class="hslider"/>
+            </div>
+          </div>
+          <div class="habit-impact" id="impact-diet"></div>
+        </div>
+        <!-- STRESS -->
+        <div class="habit-row" data-key="stress">
+          <div class="habit-top">
+            <span class="habit-emoji">😤</span>
+            <div class="habit-info"><span class="habit-name">Stress Level</span><span class="habit-unit">score / 10</span></div>
+            <span class="habit-val" id="hval-stress">6</span>
+          </div>
+          <div class="slider-wrap">
+            <div class="hslider-track">
+              <div class="hslider-fill" id="hfill-stress"></div>
+              <input type="range" min="1" max="10" value="6" id="sl-stress" class="hslider"/>
+            </div>
+          </div>
+          <div class="habit-impact" id="impact-stress"></div>
+        </div>
+      </div>
+
+      <button class="optimize-btn" id="optimize-btn">⚡ Auto-Optimize My Habits</button>
+    </aside>
+
+    <!-- RIGHT: FUTURE PANEL -->
+    <main class="future-panel">
+
+      <!-- TRAJECTORY -->
+      <div class="traj-block">
+        <div class="traj-header">
+          <span class="traj-label">Life Trajectory Score</span>
+          <span class="traj-num" id="traj-num">0</span>
+        </div>
+        <div class="traj-track">
+          <div class="traj-fill" id="traj-fill"></div>
+          <div class="traj-glow" id="traj-glow"></div>
+        </div>
+        <div class="traj-verdict" id="traj-verdict">Calculating your future...</div>
+      </div>
+
+      <!-- GAME CTA BANNER -->
+      <div class="game-banner" id="game-banner">
+        <div class="game-banner-left">
+          <div class="game-banner-title">🎮 Future Simulation</div>
+          <div class="game-banner-desc">Play a mini-game driven by YOUR habits. High stress? More obstacles. Bad sleep? Sluggish controls. See your trajectory in action.</div>
+        </div>
+        <button class="game-banner-btn" id="game-banner-btn">Play Now →</button>
+      </div>
+
+      <!-- TIMELINE -->
+      <div class="section-header">
+        <h2 class="section-title">Your Life Story</h2>
+        <div class="tl-legend">
+          <span class="leg-you">● You (now)</span>
+          <span class="leg-ghost hidden" id="leg-ghost">● Ghost You</span>
+        </div>
+      </div>
+      <div class="timeline-scroll">
+        <div class="timeline" id="timeline"></div>
+      </div>
+
+      <!-- GHOST PANEL -->
+      <div class="ghost-panel hidden" id="ghost-panel">
+        <div class="ghost-panel-title"><span>👻</span> Ghost You vs Optimized You — The Real Gap</div>
+        <div class="ghost-grid" id="ghost-grid"></div>
+      </div>
+
+      <!-- METRICS -->
+      <div class="section-header" style="margin-top:24px">
+        <h2 class="section-title">Future Vital Signs</h2>
+      </div>
+      <div class="metrics-grid" id="metrics-grid"></div>
+
+      <!-- ACTIONS -->
+      <div class="bottom-actions">
+        <button class="action-btn primary" id="share-btn">📤 Share My Timeline</button>
+        <button class="action-btn" id="reset-btn">↺ Reset</button>
+      </div>
+      <div class="share-toast hidden" id="share-toast">✅ Copied to clipboard!</div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ③ MINI-GAME MODAL
+════════════════════════════════════════════════════════ -->
+<div class="game-modal hidden" id="game-modal">
+  <div class="game-modal-backdrop" id="game-modal-backdrop"></div>
+  <div class="game-modal-box">
+
+    <!-- Modal Header -->
+    <div class="gm-header">
+      <div class="gm-title">🎮 Future Simulation</div>
+      <button class="gm-close" id="gm-close">✕</button>
+    </div>
+
+    <!-- Habit modifiers display -->
+    <div class="gm-modifiers" id="gm-modifiers">
+      <!-- injected by JS -->
+    </div>
+
+    <!-- Canvas game area -->
+    <div class="gm-canvas-wrap" id="gm-canvas-wrap">
+      <canvas id="game-canvas" width="560" height="340"></canvas>
+      <div class="gm-overlay" id="gm-overlay">
+        <div class="gm-overlay-title" id="gm-overlay-title">Future Simulation</div>
+        <div class="gm-overlay-sub" id="gm-overlay-sub">Navigate through life's obstacles.<br/>Your habits shape the difficulty.</div>
+        <button class="gm-start-btn" id="gm-start-btn">▶ Start Game</button>
+      </div>
+    </div>
+
+    <!-- HUD row -->
+    <div class="gm-hud-row">
+      <div class="gm-hud-item">
+        <span class="gm-hud-label">YEARS SURVIVED</span>
+        <span class="gm-hud-val" id="gm-score">0</span>
+      </div>
+      <div class="gm-hud-item">
+        <span class="gm-hud-label">OBSTACLES</span>
+        <span class="gm-hud-val" id="gm-obs-count">0</span>
+      </div>
+      <div class="gm-hud-item">
+        <span class="gm-hud-label">LIVES</span>
+        <span class="gm-hud-val" id="gm-lives">♥♥♥</span>
+      </div>
+      <div class="gm-hud-item">
+        <span class="gm-hud-label">SPEED</span>
+        <span class="gm-hud-val" id="gm-speed-display">1.0x</span>
+      </div>
+    </div>
+
+    <!-- Results panel (hidden until game over) -->
+    <div class="gm-results hidden" id="gm-results">
+      <div class="gm-results-header" id="gm-results-header">Game Over</div>
+      <div class="gm-compare">
+        <div class="gm-compare-col">
+          <div class="gm-compare-label">YOU (current habits)</div>
+          <div class="gm-compare-score" id="gm-your-score">0 yrs</div>
+          <div class="gm-compare-verdict" id="gm-your-verdict"></div>
+        </div>
+        <div class="gm-compare-vs">VS</div>
+        <div class="gm-compare-col optimized">
+          <div class="gm-compare-label">OPTIMIZED YOU</div>
+          <div class="gm-compare-score" id="gm-opt-score">0 yrs</div>
+          <div class="gm-compare-verdict" id="gm-opt-verdict"></div>
+        </div>
+      </div>
+      <div class="gm-results-message" id="gm-results-message"></div>
+      <div class="gm-results-actions">
+        <button class="gm-restart-btn" id="gm-restart-btn">▶ Play Again</button>
+        <button class="gm-optimize-btn" id="gm-optimize-btn">⚡ Optimize Habits</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
